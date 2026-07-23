@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1a1a1a;
+    margin: 0;
+    padding: 0;
+    font-size: 11px;
+    -webkit-print-color-adjust: exact;
+  }
+  @page { margin: 0; }
+
+  .page {
+    width: 100%;
+    padding: 0 0 40px 0;
+  }
+  .page-break { page-break-after: always; }
+  .pad { padding: 0 42px; }
+
+  /* ===== HEADER BAND ===== */
+  .hdr {
+    background: #0B67D8;
+    color: #ffffff;
+    padding: 30px 42px 34px 42px;
+  }
+  .hdr-title {
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: .3px;
+  }
+  .hdr-right {
+    text-align: right;
+    vertical-align: top;
+  }
+  .hdr-logo { max-height: 54px; margin-bottom: 8px; }
+  .hdr-addr { font-size: 12px; color: #eaf2ff; line-height: 1.4; padding-top: 34px; }
+
+  /* ===== META INFO ===== */
+  .meta { width: 100%; border-collapse: collapse; margin-top: 26px; table-layout: fixed; }
+  .meta td { vertical-align: top; padding: 0; }
+  .meta-col { width: 32%; }
+  .meta-col2 { width: 47%; }
+  .meta-col-page { width: 21%; text-align: right; }
+  .info-row { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+  .info-row td { padding: 0; font-size: 11.5px; vertical-align: top; }
+  .info-row .val { white-space: nowrap; }
+  .lbl { width: 88px; }
+  .lbl-wide { width: 132px; }
+  .lbl-id { font-weight: bold; color: #1a1a1a; }
+  .lbl-en { font-style: italic; color: #555; }
+  .sep { width: 16px; color: #1a1a1a; }
+  .val { color: #1a1a1a; }
+  .pageno-id { font-weight: bold; font-size: 13px; }
+  .pageno-en { font-style: italic; color: #555; font-size: 11px; }
+
+  /* ===== SUMMARY ===== */
+  .summary { width: 100%; border-collapse: collapse; margin-top: 30px; }
+  .summary > tbody > tr > td { vertical-align: top; }
+  .sum-left { width: 42%; }
+  .sum-title { font-size: 22px; font-weight: bold; margin-bottom: 24px; }
+  .sum-line { margin-bottom: 14px; font-size: 12px; }
+  .sum-line .k-id { font-weight: bold; }
+  .sum-line .k-en { font-style: italic; color: #555; }
+
+  .sum-right { width: 58%; }
+  .card {
+    border: 1px solid #cfe0f5;
+    border-radius: 14px;
+    padding: 20px 26px;
+  }
+  .card-row { width: 100%; border-collapse: collapse; }
+  .card-row td { padding: 9px 0; font-size: 12.5px; vertical-align: middle; }
+  .card-lbl-id { font-weight: bold; }
+  .card-lbl-en { font-style: italic; color: #555; }
+  .card-sep { width: 20px; text-align: center; }
+  .card-val { text-align: right; font-weight: bold; white-space: nowrap; }
+  .c-black { color: #1a1a1a; }
+  .c-green { color: #16a34a; }
+  .c-blue  { color: #0056b3; }
+
+  /* ===== TABEL TRANSAKSI ===== */
+  .trx { width: 100%; border-collapse: collapse; margin-top: 34px; }
+  .trx thead th {
+    background: #eef4fb;
+    text-align: left;
+    padding: 14px 12px;
+    font-size: 12px;
+    color: #1a1a1a;
+  }
+  .trx thead th .th-en { font-style: italic; font-weight: normal; color: #555; display: block; }
+  .th-right { text-align: right; }
+  .col-no { width: 5%; }
+  .col-tgl { width: 20%; }
+  .col-ket { width: 39%; }
+  .col-nom { width: 18%; }
+  .col-sal { width: 18%; }
+
+  .trx tbody td {
+    padding: 18px 12px;
+    border-bottom: 1px solid #e6eaf0;
+    vertical-align: top;
+    font-size: 11.5px;
+  }
+  .td-right { text-align: right; }
+  .tgl-main { color: #1a1a1a; }
+  .tgl-jam { color: #1a1a1a; }
+  .nom-out { font-weight: bold; color: #1a1a1a; }
+  .nom-in  { font-weight: bold; color: #16a34a; }
+  .saldo   { font-weight: bold; color: #0056b3; }
+  .empty { text-align: center; color: #888; padding: 40px 0; font-style: italic; }
+</style>
+</head>
+<body>
+<? var m = model; var pages = m.pages; ?>
+<? for (var p = 0; p < pages.length; p++) { var page = pages[p]; ?>
+  <div class="page<?= (p < pages.length - 1) ? ' page-break' : '' ?>">
+
+    <!-- ===== HEADER ===== -->
+    <div class="hdr">
+      <table width="100%" style="border-collapse:collapse;">
+        <tr>
+          <td><span class="hdr-title"><?= m.namaEntitas ?></span></td>
+          <td class="hdr-right">
+            <? if (m.logoDataUri) { ?>
+              <div><img class="hdr-logo" src="<?= m.logoDataUri ?>"></div>
+            <? } ?>
+            <div class="hdr-addr"><?= m.alamat ?></div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="pad">
+      <!-- ===== META INFO ===== -->
+      <table class="meta">
+        <tr>
+          <td class="meta-col">
+            <table class="info-row">
+              <tr>
+                <td class="lbl"><span class="lbl-id">Nama/</span><span class="lbl-en">Name</span></td>
+                <td class="sep">:</td>
+                <td class="val"><?= m.nama ?></td>
+              </tr>
+            </table>
+            <table class="info-row">
+              <tr>
+                <td class="lbl"><span class="lbl-id">Cabang/</span><span class="lbl-en">Branch</span></td>
+                <td class="sep">:</td>
+                <td class="val"><?= m.cabang ?></td>
+              </tr>
+            </table>
+          </td>
+          <td class="meta-col2">
+            <table class="info-row">
+              <tr>
+                <td class="lbl"><span class="lbl-id">Periode/</span><span class="lbl-en">Period</span></td>
+                <td class="sep">:</td>
+                <td class="val"><?= m.periode ?></td>
+              </tr>
+            </table>
+            <table class="info-row">
+              <tr>
+                <td class="lbl lbl-wide"><span class="lbl-id">Dicetak pada/</span><span class="lbl-en">Issued on</span></td>
+                <td class="sep">:</td>
+                <td class="val"><?= m.issuedOn ?></td>
+              </tr>
+            </table>
+          </td>
+          <td class="meta-col-page">
+            <div class="pageno-id"><?= page.pageNo ?> dari <?= m.totalPages ?></div>
+            <div class="pageno-en"><?= page.pageNo ?> of <?= m.totalPages ?></div>
+          </td>
+        </tr>
+      </table>
+
+      <? if (page.showSummary) { ?>
+      <!-- ===== RINGKASAN SALDO ===== -->
+      <table class="summary">
+        <tr>
+          <td class="sum-left">
+            <div class="sum-title"><?= m.jenisRekening ?></div>
+            <div class="sum-line">
+              <span class="k-id">Nomor Rekening/</span><span class="k-en">Account Number</span>
+              &nbsp; : &nbsp; <?= m.nomorRekening ?>
+            </div>
+            <div class="sum-line">
+              <span class="k-id">Mata Uang/</span><span class="k-en">Currency</span>
+              &nbsp; : &nbsp; <?= m.mataUang ?>
+            </div>
+          </td>
+          <td class="sum-right">
+            <div class="card">
+              <table class="card-row">
+                <tr>
+                  <td><span class="card-lbl-id">Saldo Awal/</span><span class="card-lbl-en">Initial Balance</span></td>
+                  <td class="card-sep">:</td>
+                  <td class="card-val c-black"><?= m.saldoAwalStr ?></td>
+                </tr>
+                <tr>
+                  <td><span class="card-lbl-id">Dana Masuk/</span><span class="card-lbl-en">Incoming Transactions</span></td>
+                  <td class="card-sep c-green">:</td>
+                  <td class="card-val c-green"><?= m.danaMasukStr ?></td>
+                </tr>
+                <tr>
+                  <td><span class="card-lbl-id">Dana Keluar/</span><span class="card-lbl-en">Outgoing Transactions</span></td>
+                  <td class="card-sep">:</td>
+                  <td class="card-val c-black"><?= m.danaKeluarStr ?></td>
+                </tr>
+                <tr>
+                  <td><span class="card-lbl-id">Saldo Akhir/</span><span class="card-lbl-en">Closing Balance</span></td>
+                  <td class="card-sep">:</td>
+                  <td class="card-val c-blue"><?= m.saldoAkhirStr ?></td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <? } ?>
+
+      <!-- ===== TABEL MUTASI ===== -->
+      <table class="trx">
+        <thead>
+          <tr>
+            <th class="col-no">No<span class="th-en">No</span></th>
+            <th class="col-tgl">Tanggal<span class="th-en">Date</span></th>
+            <th class="col-ket">Keterangan<span class="th-en">Remarks</span></th>
+            <th class="col-nom th-right">Nominal (IDR)<span class="th-en">Amount (IDR)</span></th>
+            <th class="col-sal th-right">Saldo (IDR)<span class="th-en">Balance (IDR)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <? if (!m.adaTransaksi) { ?>
+            <tr><td colspan="5" class="empty">Tidak ada transaksi pada periode ini.</td></tr>
+          <? } else { var rows = page.rows; for (var i = 0; i < rows.length; i++) { var row = rows[i]; ?>
+            <tr>
+              <td><?= row.no ?></td>
+              <td>
+                <div class="tgl-main"><?= row.tanggal ?></div>
+                <div class="tgl-jam"><?= row.jam ?></div>
+              </td>
+              <td>
+                <? for (var k = 0; k < row.keteranganLines.length; k++) { ?>
+                  <div><?= row.keteranganLines[k] ?></div>
+                <? } ?>
+              </td>
+              <td class="td-right <?= row.isKeluar ? 'nom-out' : 'nom-in' ?>"><?= row.nominalStr ?></td>
+              <td class="td-right saldo"><?= row.saldoStr ?></td>
+            </tr>
+          <? } } ?>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+<? } ?>
+</body>
+</html>
