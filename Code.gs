@@ -15,10 +15,14 @@
 var CFG = {
   SHEET_TRX: 'Transaksi',
   SHEET_SET: 'Pengaturan',
-  // Berapa baris transaksi per halaman PDF (halaman pertama lebih sedikit
-  // karena memuat ringkasan saldo di atasnya).
-  ROWS_FIRST_PAGE: 8,
-  ROWS_OTHER_PAGE: 18,
+  // Paginasi berbasis tinggi (bukan jumlah baris tetap) supaya setiap halaman
+  // selalu muat dalam satu lembar A4, berapa pun jumlah baris keterangan.
+  // Anggaran tinggi area baris (px) untuk halaman pertama (ada ringkasan) dan
+  // halaman berikutnya. Tinggi baris diperkirakan dari jumlah baris keterangan.
+  PAGE1_ROW_BUDGET: 575,
+  PAGEN_ROW_BUDGET: 745,
+  ROW_BASE_H: 24,
+  ROW_LINE_H: 21,
   LOGO_FOLDER: 'E-Statement Assets'
 };
 
@@ -32,6 +36,8 @@ var DEFAULT_SETTINGS = {
   alamat: 'Menara Mandiri 1 Jalan Jenderal Sudirman Kav. 54-55, Jakarta 12190, Indonesia',
   namaEntitas: 'e-Statement',
   saldoAwalAkun: '0',
+  footerLeft: 'PT Bank Mandiri (Persero) Tbk. berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK) dan Bank Indonesia (BI),\nserta merupakan peserta penjamin Lembaga Penjamin Simpanan (LPS)',
+  footerRight: 'Mandiri Call 14000',
   logoFileId: ''
 };
 
@@ -376,6 +382,9 @@ function buildStatementModel_(startDateStr, endDateStr) {
     danaMasukStr: '+ ' + formatIDR_(danaMasuk),
     danaKeluarStr: '- ' + formatIDR_(danaKeluar),
     saldoAkhirStr: formatIDR_(saldoAkhir),
+    // footer (newline -> <br> agar bisa 2 baris)
+    footerLeft: String(settings.footerLeft || '').replace(/\n/g, '<br>'),
+    footerRight: settings.footerRight || '',
     // tabel
     pages: pages,
     totalPages: totalPages,
@@ -385,23 +394,30 @@ function buildStatementModel_(startDateStr, endDateStr) {
   };
 }
 
+function rowHeight_(row) {
+  var lines = (row.keteranganLines && row.keteranganLines.length) || 1;
+  if (lines < 1) lines = 1;
+  return CFG.ROW_BASE_H + lines * CFG.ROW_LINE_H;
+}
+
 function paginate_(rows) {
-  var pages = [];
-  var idx = 0;
-  var n = rows.length;
-  if (n === 0) {
+  if (rows.length === 0) {
     return [{ pageNo: 1, rows: [], showSummary: true }];
   }
-  var pageNo = 0;
-  while (idx < n) {
+  var pages = [];
+  var i = 0, pageNo = 0;
+  while (i < rows.length) {
     pageNo++;
-    var cap = (pageNo === 1) ? CFG.ROWS_FIRST_PAGE : CFG.ROWS_OTHER_PAGE;
-    pages.push({
-      pageNo: pageNo,
-      rows: rows.slice(idx, idx + cap),
-      showSummary: (pageNo === 1)
-    });
-    idx += cap;
+    var budget = (pageNo === 1) ? CFG.PAGE1_ROW_BUDGET : CFG.PAGEN_ROW_BUDGET;
+    var used = 0, chunk = [];
+    while (i < rows.length) {
+      var h = rowHeight_(rows[i]);
+      if (chunk.length > 0 && used + h > budget) break;
+      chunk.push(rows[i]);
+      used += h;
+      i++;
+    }
+    pages.push({ pageNo: pageNo, rows: chunk, showSummary: (pageNo === 1) });
   }
   return pages;
 }

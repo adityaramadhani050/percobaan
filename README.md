@@ -14,13 +14,17 @@ Anda sendiri.
 
 - **Input transaksi** (Masuk / Keluar) lewat web app, saldo berjalan dihitung otomatis.
 - **Riwayat transaksi** real-time + hapus transaksi (saldo dihitung ulang).
-- **Export PDF e-Statement** per rentang tanggal:
-  - Header biru + judul entitas, ringkasan saldo (Saldo Awal, Dana Masuk,
-    Dana Keluar, Saldo Akhir), tabel mutasi dua bahasa (ID/EN).
-  - **Multi-halaman** otomatis dengan penomoran `x dari y / x of y` — header
-    berulang di tiap halaman.
+- **Export PDF e-Statement** per rentang tanggal, desain menyerupai e-Statement
+  bank (warna, tipografi, dan tata letak dicocokkan dari dokumen referensi):
+  - Header biru (`#007DFE`) + judul entitas + logo kanan-atas + alamat.
+  - Ringkasan saldo (Saldo Awal, Dana Masuk hijau, Dana Keluar, Saldo Akhir biru).
+  - Tabel mutasi dua bahasa (ID/EN), nominal hitam tebal, saldo biru tebal.
+  - **Footer** disclaimer (kiri) + call center (kanan) di tiap halaman.
+  - **Multi-halaman** otomatis dengan penomoran `x dari y / x of y` — header &
+    footer berulang di tiap halaman. Paginasi **berbasis tinggi**, jadi tiap
+    halaman selalu muat satu lembar A4 berapa pun panjang keterangan.
 - **Pengaturan header dinamis**: nama, cabang, nomor rekening, jenis rekening,
-  mata uang, alamat, saldo awal akun.
+  mata uang, alamat, saldo awal akun, dan teks footer.
 - **Upload logo** (bisa diganti-ganti) yang muncul di header PDF.
 
 ---
@@ -88,8 +92,13 @@ clasp deploy
 - **Saldo Awal periode** pada PDF = saldo akun tepat sebelum transaksi pertama
   dalam rentang tanggal (dihitung dari `Saldo Awal Akun` + seluruh transaksi
   sebelum periode).
-- Jumlah baris per halaman diatur di `Code.gs` (`CFG.ROWS_FIRST_PAGE`,
-  `CFG.ROWS_OTHER_PAGE`) — sesuaikan bila konten meluber.
+- Paginasi berbasis tinggi diatur di `Code.gs` (`CFG.PAGE1_ROW_BUDGET`,
+  `CFG.PAGEN_ROW_BUDGET`, `CFG.ROW_BASE_H`, `CFG.ROW_LINE_H`). Bila hasil PDF
+  di Apps Script sedikit meluber/terlalu longgar, sesuaikan angka anggaran ini.
+- **Logo**: agar menyatu dengan header biru, unggah logo berlatar transparan
+  (PNG) atau berlatar warna `#007DFE`. Logo tampil di kanan-atas header.
+- **Footer** default berisi teks contoh; ubah lewat menu Pengaturan
+  (Footer Kiri/Kanan) sesuai entitas Anda.
 - Format angka mengikuti gaya Indonesia (`9.553.519,52`) dan tanggal
   `dd MMM yyyy` + jam `HH:mm:ss WIB` (timezone `Asia/Jakarta`).
 - Logo disimpan di Google Drive (folder `E-Statement Assets`) dan disematkan ke
