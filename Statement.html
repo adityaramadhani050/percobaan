@@ -12,6 +12,10 @@
     -webkit-print-color-adjust: exact;
   }
   @page { margin: 0; }
+  /* Hilangkan spasi antar-sel bawaan (garis putih di header tabel pada
+     konverter PDF Google) untuk semua tabel. */
+  table { border-collapse: collapse; border-spacing: 0; }
+  td, th { border-spacing: 0; }
 
   .page {
     position: relative;
@@ -28,7 +32,7 @@
   .hdr-tbl td { padding: 0 34px; }
   .hdr-left { vertical-align: middle; }
   .hdr-title { font-size: 27px; font-weight: bold; color: #ffffff; letter-spacing: .2px; }
-  .hdr-right { vertical-align: top; text-align: right; padding-top: 18px; }
+  .hdr-right { vertical-align: middle; text-align: right; }
   .hdr-logo { max-height: 42px; margin-bottom: 8px; }
   .hdr-addr { font-size: 11.5px; color: #ffffff; line-height: 1.3; }
 
@@ -43,9 +47,9 @@
   .info-row .val { white-space: nowrap; }
   .lbl-id { font-weight: bold; color: #1a1a1a; }
   .lbl-en { font-style: italic; color: #444; }
-  .sep { width: 22px; }
-  .lbl1 { width: 122px; }
-  .lbl2 { width: 140px; }
+  .sep { width: 16px; }
+  .lbl1 { width: 106px; }
+  .lbl2 { width: 126px; }
   .pageno-id { font-weight: bold; font-size: 12.5px; }
   .pageno-en { font-style: italic; color: #444; font-size: 11px; margin-top: 2px; }
 
@@ -56,7 +60,7 @@
   .sum-title { font-size: 21px; font-weight: bold; margin-bottom: 20px; }
   .sum-info { width: 100%; border-collapse: collapse; }
   .sum-info td { font-size: 11.5px; padding: 0 0 13px 0; vertical-align: top; white-space: nowrap; }
-  .sum-info .lbl { width: 196px; }
+  .sum-info .lbl { width: 182px; }
 
   .sum-right { width: 55%; }
   .card {
@@ -69,7 +73,7 @@
   .card-lbl-id { font-weight: bold; }
   .card-lbl-en { font-style: italic; color: #444; }
   .card-lbl { width: 58%; white-space: nowrap; }
-  .card-sep { width: 22px; }
+  .card-sep { width: 18px; }
   .card-val { text-align: right; font-weight: bold; white-space: nowrap; }
   .c-black { color: #1a1a1a; }
   .c-green { color: #06AA6E; }
@@ -124,7 +128,7 @@
 
     <!-- ===== HEADER ===== -->
     <div class="hdr">
-      <table class="hdr-tbl">
+      <table cellspacing="0" cellpadding="0" class="hdr-tbl">
         <tr>
           <td class="hdr-left"><span class="hdr-title"><?= m.namaEntitas ?></span></td>
           <td class="hdr-right">
@@ -139,17 +143,17 @@
 
     <div class="pad">
       <!-- ===== META INFO ===== -->
-      <table class="meta">
+      <table cellspacing="0" cellpadding="0" class="meta">
         <tr>
           <td class="meta-col">
-            <table class="info-row">
+            <table cellspacing="0" cellpadding="0" class="info-row">
               <tr>
                 <td class="lbl1"><span class="lbl-id">Nama/</span><span class="lbl-en">Name</span></td>
                 <td class="sep">:</td>
                 <td class="val"><?= m.nama ?></td>
               </tr>
             </table>
-            <table class="info-row">
+            <table cellspacing="0" cellpadding="0" class="info-row">
               <tr>
                 <td class="lbl1"><span class="lbl-id">Cabang/</span><span class="lbl-en">Branch</span></td>
                 <td class="sep">:</td>
@@ -158,14 +162,14 @@
             </table>
           </td>
           <td class="meta-col2">
-            <table class="info-row">
+            <table cellspacing="0" cellpadding="0" class="info-row">
               <tr>
                 <td class="lbl2"><span class="lbl-id">Periode/</span><span class="lbl-en">Period</span></td>
                 <td class="sep">:</td>
                 <td class="val"><?= m.periode ?></td>
               </tr>
             </table>
-            <table class="info-row">
+            <table cellspacing="0" cellpadding="0" class="info-row">
               <tr>
                 <td class="lbl2"><span class="lbl-id">Dicetak pada/</span><span class="lbl-en">Issued on</span></td>
                 <td class="sep">:</td>
@@ -182,11 +186,11 @@
 
       <? if (page.showSummary) { ?>
       <!-- ===== RINGKASAN SALDO ===== -->
-      <table class="summary">
+      <table cellspacing="0" cellpadding="0" class="summary">
         <tr>
           <td class="sum-left">
             <div class="sum-title"><?= m.jenisRekening ?></div>
-            <table class="sum-info">
+            <table cellspacing="0" cellpadding="0" class="sum-info">
               <tr>
                 <td class="lbl"><span class="lbl-id">Nomor Rekening/</span><span class="lbl-en">Account Number</span></td>
                 <td class="sep">:</td>
@@ -201,7 +205,7 @@
           </td>
           <td class="sum-right">
             <div class="card">
-              <table class="card-row">
+              <table cellspacing="0" cellpadding="0" class="card-row">
                 <tr>
                   <td class="card-lbl"><span class="card-lbl-id">Saldo Awal/</span><span class="card-lbl-en">Initial Balance</span></td>
                   <td class="card-sep">:</td>
@@ -230,7 +234,7 @@
       <? } ?>
 
       <!-- ===== TABEL MUTASI ===== -->
-      <table class="trx">
+      <table cellspacing="0" cellpadding="0" class="trx">
         <thead>
           <tr>
             <th class="col-no">No<span class="th-en">No</span></th>
@@ -263,7 +267,7 @@
     <!-- ===== FOOTER ===== -->
     <div class="footer">
       <div class="footer-line"></div>
-      <table class="footer-tbl">
+      <table cellspacing="0" cellpadding="0" class="footer-tbl">
         <tr>
           <td><?!= m.footerLeft ?></td>
           <td class="footer-right"><?= m.footerRight ?></td>
