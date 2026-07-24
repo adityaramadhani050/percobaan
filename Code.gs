@@ -373,7 +373,7 @@ function buildStatementModel_(startDateStr, endDateStr) {
       tanggal: formatTanggal_(tgl),
       jam: formatJam_(tgl),
       keteranganLines: String(r[4] || '').split('\n'),
-      nominalStr: (signed < 0 ? '-' : '') + formatIDR_(nominal),
+      nominalStr: (signed < 0 ? '-' : '+') + formatIDR_(nominal),
       isKeluar: signed < 0,
       saldoStr: formatIDR_(running)
     });
