@@ -90,6 +90,10 @@
     color: #1a1a1a;
   }
   .trx thead th .th-en { font-style: italic; font-weight: normal; color: #444; display: block; }
+  /* Celah putih pemisah header (grup No+Tanggal+Keterangan menyatu, lalu
+     Nominal dan Saldo terpisah) — sesuai referensi. */
+  .trx thead th.col-nom,
+  .trx thead th.col-sal { border-left: 7px solid #ffffff; }
   .th-right { text-align: right; }
   .col-no  { width: 5%; }
   .col-tgl { width: 17%; }
