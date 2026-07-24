@@ -152,6 +152,11 @@ function uploadLogo(base64, mimeType, filename) {
 
   var blob = Utilities.newBlob(Utilities.base64Decode(base64), mimeType, filename || 'logo');
   var file = folder.createFile(blob);
+  // Konverter PDF Google tidak bisa merender gambar data-URI, jadi file logo
+  // dibuat dapat diakses via URL publik (view-only) agar bisa disematkan ke PDF.
+  try {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (e) {}
   saveSettings({ logoFileId: file.getId() });
   return getSettings();
 }
@@ -177,6 +182,24 @@ function getLogoDataUri_(settings) {
     var blob = file.getBlob();
     return 'data:' + blob.getContentType() + ';base64,' +
       Utilities.base64Encode(blob.getBytes());
+  } catch (e) {
+    return '';
+  }
+}
+
+/**
+ * URL gambar logo untuk disematkan ke PDF. Konverter HTML->PDF Google tidak
+ * merender data-URI, jadi dipakai URL publik langsung dari Google Drive.
+ * File dipastikan berbagi publik (view) supaya bisa diambil konverter.
+ */
+function getLogoUrl_(settings) {
+  if (!settings || !settings.logoFileId) return '';
+  try {
+    var file = DriveApp.getFileById(settings.logoFileId);
+    try {
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    } catch (e) {}
+    return 'https://lh3.googleusercontent.com/d/' + settings.logoFileId + '=w400';
   } catch (e) {
     return '';
   }
@@ -368,7 +391,7 @@ function buildStatementModel_(startDateStr, endDateStr) {
     // header
     namaEntitas: settings.namaEntitas || 'e-Statement',
     alamat: settings.alamat || '',
-    logoDataUri: getLogoDataUri_(settings),
+    logoDataUri: getLogoUrl_(settings),
     // meta
     nama: settings.nama || '',
     cabang: settings.cabang || '',
