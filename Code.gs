@@ -19,10 +19,10 @@ var CFG = {
   // selalu muat dalam satu lembar A4, berapa pun jumlah baris keterangan.
   // Anggaran tinggi area baris (px) untuk halaman pertama (ada ringkasan) dan
   // halaman berikutnya. Tinggi baris diperkirakan dari jumlah baris keterangan.
-  PAGE1_ROW_BUDGET: 575,
-  PAGEN_ROW_BUDGET: 745,
-  ROW_BASE_H: 24,
-  ROW_LINE_H: 21,
+  PAGE1_ROW_BUDGET: 590,
+  PAGEN_ROW_BUDGET: 760,
+  ROW_BASE_H: 22,
+  ROW_LINE_H: 17,
   LOGO_FOLDER: 'E-Statement Assets'
 };
 
